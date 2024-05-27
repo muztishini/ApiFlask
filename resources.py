@@ -22,8 +22,9 @@ class TaskList(Resource):
                     
         """
         tasks = db.session.query(Task).all()
-        task_list = [{'id': task.id, 'title': task.title, 'description': task.description, 'created_at': str(task.created_at),
-                    'updated_at': str(task.updated_at)} for task in tasks]
+        task_list = [
+            {'id': task.id, 'title': task.title, 'description': task.description, 'created_at': str(task.created_at),
+             'updated_at': str(task.updated_at)} for task in tasks]
         if task_list:
             return {'tasks': task_list}
         else:
@@ -63,12 +64,12 @@ class TaskList(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('title', type=str, required=True, help='Title is required')
         parser.add_argument('description', type=str, required=True, help='Description is required')
-        
+
         args = parser.parse_args()
-        
+
         title = args['title']
         description = args['description']
-                
+
         new_task = Task(description=description, title=title)
         db.session.add(new_task)
         db.session.commit()
@@ -79,10 +80,10 @@ class TaskList(Resource):
                                                   'updated_at': str(new_task.updated_at)}}
 
 
-class TaskApi(Resource): 
-       
+class TaskApi(Resource):
+
     def get(self, task_id):
-        
+
         """
             Get one task
             ---
@@ -106,7 +107,7 @@ class TaskApi(Resource):
                                 items:
                                     $ref: '#/components/schemas/Task'
         """
-        
+
         task = db.session.query(Task).get(task_id)
         if task:
             return {'id': task.id, 'title': task.title,
@@ -115,9 +116,9 @@ class TaskApi(Resource):
                     'updated_at': str(task.updated_at)}
         else:
             return {'message': 'Task not found'}
-    
+
     def put(self, task_id):
-        
+
         """
             Update task
             ---
@@ -156,15 +157,15 @@ class TaskApi(Resource):
                                 items:
                                     $ref: '#/components/schemas/Task'
         """
-        
+
         task = db.session.query(Task).get(task_id)
         if task:
             parser = reqparse.RequestParser()
             parser.add_argument('title', type=str, required=True, help='Title is required')
             parser.add_argument('description', type=str, required=True, help='Description is required')
-            
+
             args = parser.parse_args()
-            
+
             title = args['title']
             description = args['description']
             task.description = description
@@ -179,7 +180,7 @@ class TaskApi(Resource):
             return {"message": "Task not found"}
 
     def delete(self, task_id):
-        
+
         """
             Delete task
             ---
@@ -197,7 +198,7 @@ class TaskApi(Resource):
                 200:
                     description: Delete task.
         """
-        
+
         task = db.session.query(Task).get(task_id)
         if task:
             db.session.delete(task)
