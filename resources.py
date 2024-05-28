@@ -108,7 +108,7 @@ class TaskApi(Resource):
                                     $ref: '#/components/schemas/Task'
         """
 
-        task = db.session.query(Task).get(task_id)
+        task = db.session.get(Task, task_id)
         if task:
             return {'id': task.id, 'title': task.title,
                     'description': task.description,
@@ -158,7 +158,7 @@ class TaskApi(Resource):
                                     $ref: '#/components/schemas/Task'
         """
 
-        task = db.session.query(Task).get(task_id)
+        task = db.session.get(Task, task_id)
         if task:
             parser = reqparse.RequestParser()
             parser.add_argument('title', type=str, required=True, help='Title is required')
@@ -199,7 +199,7 @@ class TaskApi(Resource):
                     description: Delete task.
         """
 
-        task = db.session.query(Task).get(task_id)
+        task = db.session.get(Task, task_id)
         if task:
             db.session.delete(task)
             db.session.commit()
